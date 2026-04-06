@@ -38,7 +38,7 @@ Return ONLY a valid JSON object with these exact keys (use null if not found):
   "referrer": string | null,
   "gp": string | null
 }
-No markdown, no explanation, just the JSON object. Report the name in the format Surname, First name. The insurer will follow the letters PVT and the Insurance number is the string of characters immediately following that. Convert the address from all capitals to sentence case. The birthdate will follow the letters DOB.`,
+No markdown, no explanation, just the JSON object. Report the name in the format Surname, First name. The insurer will follow the letters PVT and the Insurance number is the string of characters immediately following that. Convert the address from all capitals to sentence case. The birthdate will follow the letters DOB in the format DD/MM/YYYY - it should be reported in YYYY/MM/DD format.`,
             },
           ],
         },
