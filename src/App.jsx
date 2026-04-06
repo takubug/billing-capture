@@ -255,7 +255,7 @@ const SCOPES = [
 function useGoogleAuth() {
   const [accessToken, setAccessToken] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
-  const [clientId, setClientId] = useState("");
+  const [clientId, setClientId] = useState(() => localStorage.getItem("clientId") || "");
   const [showClientIdInput, setShowClientIdInput] = useState(false);
 
   const signIn = useCallback(() => {
@@ -662,7 +662,7 @@ export default function App() {
             <h2 style={s.cardTitle}>Settings</h2>
             <div style={s.fieldGroup}>
               <label style={s.label}>Google OAuth Client ID</label>
-              <input style={s.input} value={auth.clientId} onChange={(e) => auth.setClientId(e.target.value)} placeholder="xxxx.apps.googleusercontent.com" />
+              <input style={s.input} value={auth.clientId} onChange={(e) => { auth.setClientId(e.target.value); localStorage.setItem("clientId", e.target.value); }} placeholder="xxxx.apps.googleusercontent.com" />
               <p style={s.hint}>
                 Create at{" "}
                 <a href="https://console.cloud.google.com" target="_blank" rel="noreferrer" style={s.link}>console.cloud.google.com</a>.
