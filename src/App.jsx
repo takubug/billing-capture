@@ -5,7 +5,7 @@ import { useState, useRef, useCallback } from "react";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 
 // Replace this with your Cloudflare Worker URL after deploying the proxy
-const PROXY_URL = "https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev";
+const PROXY_URL = "https://billing-capture.oscar-137.workers.dev/";
 
 async function extractLabelData(base64Image, mediaType) {
   const response = await fetch(PROXY_URL, {
