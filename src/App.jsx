@@ -5,7 +5,7 @@ import { useState, useRef, useCallback } from "react";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 
 // Replace this with your Cloudflare Worker URL after deploying the proxy
-const PROXY_URL = "https://billing-capture.oscar-137.workers.dev/";
+const PROXY_URL = "https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev";
 
 async function extractLabelData(base64Image, mediaType) {
   const response = await fetch(PROXY_URL, {
@@ -24,7 +24,8 @@ async function extractLabelData(base64Image, mediaType) {
             },
             {
               type: "text",
-              text: `You are a medical administrative assistant. Extract all available patient information from this patient label image.
+              text: `You are a medical administrative assistant. Extract all available patient information from this Australian patient label image.
+
 Return ONLY a valid JSON object with these exact keys (use null if not found):
 {
   "patientName": string | null,
@@ -38,7 +39,16 @@ Return ONLY a valid JSON object with these exact keys (use null if not found):
   "referrer": string | null,
   "gp": string | null
 }
-No markdown, no explanation, just the JSON object. Report the name in the format Surname, First name. The insurer will follow the letters PVT and the Insurance number is the string of characters immediately following that. Convert the address from all capitals to sentence case. The birthdate will follow the letters DOB in the format DD/MM/YYYY - it should be reported in YYYY/MM/DD format.`,
+
+Formatting rules - follow these exactly:
+- "dob": convert to YYYY-MM-DD format regardless of how it appears on the label (e.g. "12/03/1975" or "12 Mar 1975" or "12-03-75" should all become "1975-03-12"). For two-digit years, assume 19xx if the result would be a plausible adult DOB.
+- "medicareNumber": the 10-digit number only, no spaces or hyphens.
+- "medicareIRN": the single digit that follows the medicare number (the Individual Reference Number).
+- "patientName": format as "Firstname LASTNAME".
+- "address": include full address on one line if visible and format it in sentence case.
+- If a field is partially visible or ambiguous, make your best inference rather than returning null.
+
+No markdown, no explanation, just the JSON object.`,
             },
           ],
         },
