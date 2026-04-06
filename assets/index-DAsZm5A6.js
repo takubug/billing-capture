@@ -54,11 +54,14 @@ Return ONLY a valid JSON object with these exact keys (use null if not found):
 }
 
 Formatting rules - follow these exactly:
+- correct all words to sentence case.
 - "dob": convert to YYYY-MM-DD format regardless of how it appears on the label (e.g. "12/03/1975" or "12 Mar 1975" or "12-03-75" should all become "1975-03-12"). For two-digit years, assume 19xx if the result would be a plausible adult DOB.
 - "medicareNumber": the 10-digit number only, no spaces or hyphens.
 - "medicareIRN": the single digit that follows the medicare number (the Individual Reference Number).
 - "patientName": format as "Firstname LASTNAME".
-- "address": include full address on one line if visible and format it in sentence case.
+- "address": include full address on one line if visible.
+- "insurer": will follow the letters PVT and will be a three letter code.
+- "insuranceNumber": will follow the insurer and will be a string of numbers and/or letters.
 - If a field is partially visible or ambiguous, make your best inference rather than returning null.
 
 No markdown, no explanation, just the JSON object.`}]}]})}),r=await n.json();if(!n.ok)throw new Error(((o=r==null?void 0:r.error)==null?void 0:o.message)||`API error ${n.status}`);const l=((u=(i=r.content)==null?void 0:i.find(s=>s.type==="text"))==null?void 0:u.text)||"{}";try{return JSON.parse(l.replace(/```json|```/g,"").trim())}catch{return{}}}async function Fd(e,t,n){const r=[[n.timestamp,n.patientName??"",n.dob??"",n.medicareNumber??"",n.medicareIRN??"",n.medicareExpiry??"",n.address??"",n.insurer??"",n.insuranceNumber??"",n.referrer??"",n.gp??"",n.serviceCode,n.dateOfService]];return(await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${e}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED`,{method:"POST",headers:{Authorization:`Bearer ${t}`,"Content-Type":"application/json"},body:JSON.stringify({values:r})})).ok}async function Ud(e){return(await(await fetch("https://sheets.googleapis.com/v4/spreadsheets",{method:"POST",headers:{Authorization:`Bearer ${e}`,"Content-Type":"application/json"},body:JSON.stringify({properties:{title:"Patient Billing Records"},sheets:[{properties:{title:"Sheet1"},data:[{startRow:0,startColumn:0,rowData:[{values:["Timestamp","Patient Name","DOB","Medicare Number","Medicare IRN","Medicare Expiry","Address","Insurer","Insurance Number","Referrer","GP","Service Code","Date of Service"].map(r=>({userEnteredValue:{stringValue:r}}))}]}]}]})})).json()).spreadsheetId}async function Ad(e,t){return(await(await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${e}/values/Sheet1`,{headers:{Authorization:`Bearer ${t}`}})).json()).values||[]}async function Bd(e,t,n,r){const l=[`To: ${t}`,`Subject: ${n}`,"",r].join(`
