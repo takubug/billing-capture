@@ -41,11 +41,14 @@ Return ONLY a valid JSON object with these exact keys (use null if not found):
 }
 
 Formatting rules - follow these exactly:
+- correct all words to sentence case.
 - "dob": convert to YYYY-MM-DD format regardless of how it appears on the label (e.g. "12/03/1975" or "12 Mar 1975" or "12-03-75" should all become "1975-03-12"). For two-digit years, assume 19xx if the result would be a plausible adult DOB.
 - "medicareNumber": the 10-digit number only, no spaces or hyphens.
 - "medicareIRN": the single digit that follows the medicare number (the Individual Reference Number).
 - "patientName": format as "Firstname LASTNAME".
-- "address": include full address on one line if visible and format it in sentence case.
+- "address": include full address on one line if visible.
+- "insurer": will follow the letters PVT and will be a three letter code.
+- "insuranceNumber": will follow the insurer and will be a string of numbers and/or letters.
 - If a field is partially visible or ambiguous, make your best inference rather than returning null.
 
 No markdown, no explanation, just the JSON object.`,
