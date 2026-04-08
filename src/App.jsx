@@ -5,7 +5,7 @@ import { useState, useRef, useCallback } from "react";
 // Forest Floor #002521 | Forest Biome #194B46 | Chalk Blue #BFCDCC
 // Light Turquoise #84C4C0 | Bright Jade #CFF4D2 | White #FFFFFF | Black #27272A
 
-const LOGO_SRC = "data:image/png;base64,";
+const LOGO_SRC = `${import.meta.env.BASE_URL}icon.svg`;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
