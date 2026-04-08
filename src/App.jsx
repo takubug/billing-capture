@@ -5,7 +5,6 @@ import { useState, useRef, useCallback } from "react";
 // Forest Floor #002521 | Forest Biome #194B46 | Chalk Blue #BFCDCC
 // Light Turquoise #84C4C0 | Bright Jade #CFF4D2 | White #FFFFFF | Black #27272A
 
-const LOGO_SRC = `${import.meta.env.BASE_URL}icon.svg`;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -334,7 +333,10 @@ export default function App() {
 
       {/* Header */}
       <header style={s.header}>
-        <img src={LOGO_SRC} alt="OA Surgery" style={s.logo} />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={s.logo} aria-label="OA Surgery">
+            <rect width="512" height="512" rx="100" fill="#13132b"/>
+            <text x="256" y="340" fontSize="300" textAnchor="middle" fontFamily="Arial">⚕</text>
+          </svg>
         <div style={s.headerRight}>
           {auth.accessToken ? (
             <span style={s.signedIn}>● {auth.userEmail || "Signed in"}</span>
@@ -531,7 +533,6 @@ const styles = {
   logo: {
     height: 36,
     width: "auto",
-    objectFit: "contain",
   },
   headerRight: {},
   signedIn: { fontSize: 12, color: "#194B46", fontWeight: 500 },
