@@ -35,7 +35,7 @@ billing-capture/
 | Framework | React 18.2.0 |
 | Build tool | Vite 5.1.4 |
 | Deployment | GitHub Pages (via `gh-pages` npm package + GitHub Actions) |
-| AI OCR | Claude Sonnet (`claude-sonnet-4-20250514`) via Cloudflare Worker proxy |
+| AI OCR | Claude Sonnet (`claude-sonnet-4-6`) via Cloudflare Worker proxy |
 | Data storage | Google Sheets API v4 |
 | Image storage | Google Drive API v3 |
 | Email | Gmail API v1 |
@@ -138,7 +138,7 @@ The source for this worker is `anthropic-proxy-worker.js`. It:
 - Injects the `ANTHROPIC_API_KEY` secret (set in Cloudflare dashboard, never in code)
 - Returns the response with appropriate CORS headers
 
-If you change the AI model, update `ANTHROPIC_MODEL` at the top of `App.jsx`. Current model: `claude-sonnet-4-20250514`.
+If you change the AI model, update `ANTHROPIC_MODEL` at the top of `App.jsx`. Current model: `claude-sonnet-4-6`.
 
 ---
 
@@ -232,7 +232,7 @@ There is no test suite. There is no Jest, Vitest, or any testing framework. Do n
 
 Update `ANTHROPIC_MODEL` at line 12 of `src/App.jsx`:
 ```js
-const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
 ```
 
 ### Add a new form field

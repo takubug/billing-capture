@@ -8,7 +8,7 @@ import { useState, useRef, useCallback } from "react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
 const PROXY_URL = "https://billing-capture.oscar-137.workers.dev/";
 
 async function extractLabelData(base64Image, mediaType) {
