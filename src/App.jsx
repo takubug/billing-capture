@@ -67,6 +67,7 @@ async function getOrCreateDriveFolder(accessToken) {
     `https://www.googleapis.com/drive/v3/files?q=name%3D'${DRIVE_FOLDER_NAME}'+and+mimeType%3D'application%2Fvnd.google-apps.folder'+and+trashed%3Dfalse&fields=files(id)`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
+  if (!search.ok) throw new Error(`Drive folder search failed (${search.status}): ${await search.text()}`);
   const searchData = await search.json();
   if (searchData.files?.length > 0) return searchData.files[0].id;
   const create = await fetch("https://www.googleapis.com/drive/v3/files", {
@@ -74,6 +75,7 @@ async function getOrCreateDriveFolder(accessToken) {
     headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
     body: JSON.stringify({ name: DRIVE_FOLDER_NAME, mimeType: "application/vnd.google-apps.folder" }),
   });
+  if (!create.ok) throw new Error(`Drive folder create failed (${create.status}): ${await create.text()}`);
   const createData = await create.json();
   return createData.id;
 }
@@ -90,6 +92,7 @@ async function uploadImageToDrive(accessToken, file, patientName, timestamp) {
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink",
     { method: "POST", headers: { Authorization: `Bearer ${accessToken}` }, body: form }
   );
+  if (!res.ok) throw new Error(`Drive upload failed (${res.status}): ${await res.text()}`);
   const data = await res.json();
   return data.webViewLink || null;
 }
@@ -105,7 +108,7 @@ async function appendToSheet(sheetId, accessToken, rowData) {
     rowData.dateOfService, rowData.imageUrl ?? "",
   ]];
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
     { method: "POST", headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" }, body: JSON.stringify({ values }) }
   );
   return res.ok;
@@ -123,6 +126,7 @@ async function createSheet(accessToken) {
       ].map((v) => ({ userEnteredValue: { stringValue: v } })) }] }] }],
     }),
   });
+  if (!res.ok) throw new Error(`Sheet create failed (${res.status}): ${await res.text()}`);
   const data = await res.json();
   return data.spreadsheetId;
 }
@@ -132,6 +136,7 @@ async function getSheetData(sheetId, accessToken) {
     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
+  if (!res.ok) throw new Error(`Sheet read failed (${res.status}): ${await res.text()}`);
   const data = await res.json();
   return data.values || [];
 }
@@ -265,7 +270,10 @@ export default function App() {
       if (imageFile) {
         setSaveStatus("Uploading image to Drive…");
         try { imageUrl = await uploadImageToDrive(auth.accessToken, imageFile, fields.patientName, timestamp) || ""; }
-        catch (e) { console.warn("Image upload failed:", e); }
+        catch (e) {
+          console.warn("Image upload failed:", e);
+          showToast(`Image upload failed: ${e?.message?.slice(0, 120) || "see console"}. Saving record without image.`, "error");
+        }
       }
       setSaveStatus("Saving to Sheets…");
       const ok = await appendToSheet(sid, auth.accessToken, { ...fields, timestamp, imageUrl });
